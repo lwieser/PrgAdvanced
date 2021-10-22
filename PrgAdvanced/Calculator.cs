@@ -22,36 +22,62 @@ namespace PrgAdvanced
 
         public bool TryAdd(string key)
         {
+            key = key.Replace(" ", "");
             var currentOperator = "";
-            EntryType expectedType = GetExpectedType();
-
-            if (key.Equals("b", StringComparison.InvariantCultureIgnoreCase))
+            var intPoped = 0;
+            var success = false;
+            do
             {
-            }
-            else if (expectedType == EntryType.Operator)
-            {
-                var trimed = key.Trim();
-                if (_validOperators.Contains(trimed))
+                EntryType expectedType = GetExpectedType();
+                var i = 0;
+                if (key.Equals("b", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    _operators.Add(trimed);
+                }
+                else if (expectedType == EntryType.Operator)
+                {
+                    var trimed = key.Substring(0,1);
+                    if (_validOperators.Contains(trimed))
+                    {
+                        _operators.Add(trimed);
+                        intPoped = 1;
+                        success = true;
+                    }
+                }
+                else
+                {
+                    var iteration = 1;
+                    var valid = false;
+                    var lastSucces = "";
+                    var testedKey = "";
+                    do
+                    {
+                        testedKey = key.Substring(0,iteration);
+                        valid = int.TryParse(testedKey, out var intValue);
+                        if (valid)
+                        {
+                            lastSucces = testedKey;
+                            iteration++;
+                        }
+                    } while (valid && testedKey.Length < key.Length);
+
+                    if (iteration >= 2)
+                    {
+                        _values.Add(int.Parse(lastSucces));
+                        success = true;
+                        intPoped = lastSucces.Length;
+                    }
+
                 }
 
-                return true;
-            }
-            else
-            {
-                if (int.TryParse(key, out var intValue))
-                {
-                    _values.Add(intValue);
-                }
-                return true;
-            }
-            return false;
+                key = key.Substring(intPoped);
+            } while (intPoped > 0 && !String.IsNullOrEmpty(key));
+
+            return success;
         }
 
         public void Pop()
         {
-            if (_operators.Count == 0 || _values.Count == 0) return;
+            if (_operators.Count == 0 && _values.Count == 0) return;
 
             if (_operators.Count >= _values.Count)
             {
