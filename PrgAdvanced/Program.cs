@@ -20,8 +20,12 @@ namespace PrgAdvanced
                 key = Console.ReadLine();
                 if (calculator.TryAdd(key))
                 {
-                    Console.WriteLine(calculator.GetFormula());
-                    Console.WriteLine(calculator.GetValue());
+                    DisplayCalculator(calculator);
+                }
+                else if (key.Trim().Equals("b", StringComparison.CurrentCultureIgnoreCase))
+                {
+                        calculator.Pop();
+                        DisplayCalculator(calculator);
                 }
                 else
                 {
@@ -79,6 +83,12 @@ namespace PrgAdvanced
                 // }
 
             } while (!key.Equals("Bye", StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        private static void DisplayCalculator(Calculator calculator)
+        {
+            Console.WriteLine(calculator.GetFormula());
+            Console.WriteLine(calculator.GetValue());
         }
     }
 }

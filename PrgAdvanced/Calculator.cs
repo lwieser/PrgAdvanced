@@ -49,6 +49,20 @@ namespace PrgAdvanced
             return false;
         }
 
+        public void Pop()
+        {
+            if (_operators.Count == 0 || _values.Count == 0) return;
+
+            if (_operators.Count >= _values.Count)
+            {
+                _operators.RemoveAt(_operators.Count - 1);
+            }
+            else
+            {
+                _values.RemoveAt(_values.Count - 1);
+            }
+        }
+
         public string GetFormula()
         {
             var str = "";
